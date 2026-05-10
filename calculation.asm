@@ -13,47 +13,54 @@ remove:
 
 calc:
     # save registers
-    addi $sp, $sp, -8
+    addi $sp, $sp, -24
     sw $ra, 0($sp)
     sw $s0, 4($sp)
+    sw $s1, 8($sp)
+    sw $s2, 12($sp)
+    sw $s3, 16($sp)
+    sw $s4, 20($sp)
 
-    move $t0, $a0   # x
-    move $t1, $a1   # y
-    move $t2, $a2   # n
+    move $s0, $a0
+    move $s1, $a1
+    move $s2, $a2
 
-    li $t3, 5   # z = 5
-    li $t4, 0   # i = 0
+    li $s3, 5
+    li $s4, 0
 
 forLoop:
-    bge $t4, $t2, calcDone
+    bge $s4, $s2, calcDone
 
     # z = z - x + 2*y
-    sll $t5, $t1, 1
-    sub $t3, $t3, $t0
-    add $t3, $t3, $t5
+    sll $t0, $s1, 1
+    sub $s3, $s3, $s0
+    add $s3, $s3, $t0
 
     # if (x >= 2)
-    blt $t0, 2, skipRemove
+    slti $t1, $s0, 2
+    bne $t1, $zero, skipRemove
 
-    move $a0, $t0
-    move $a1, $t1
+    move $a0, $s0
+    move $a1, $s1
     jal remove
-    move $t1, $v0
+    move $s1, $v0
 
 skipRemove:
-    # x++
-    addi $t0, $t0, 1
-    # i++
-    addi $t4, $t4, 1
+    addi $s0, $s0, 1
+    addi $s4, $s4, 1
 
     j forLoop
 
 calcDone:
-    move $v0, $t3
+    move $v0, $s3
 
     lw $ra, 0($sp)
     lw $s0, 4($sp)
-    addi $sp, $sp, 8
+    lw $s1, 8($sp)
+    lw $s2, 12($sp)
+    lw $s3, 16($sp)
+    lw $s4, 20($sp)
+    addi $sp, $sp, 24
 
     jr $ra
     
