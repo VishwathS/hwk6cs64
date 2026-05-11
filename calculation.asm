@@ -61,9 +61,8 @@ calcDone:
     lw $s3, 16($sp)
     lw $s4, 20($sp)
     addi $sp, $sp, 24
-
     jr $ra
-    
+
 main:  # DO NOT MODIFY THE MAIN SECTION
     li $a0, 4
     li $a1, 10
